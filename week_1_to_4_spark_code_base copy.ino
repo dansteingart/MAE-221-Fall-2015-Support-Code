@@ -1,8 +1,6 @@
 //Base Spark Code for Labs 1 & 2 (Weeks 1-4)
 //MAE 221 Fall 2015 
-//This code allows for all ports to be read simultaneously, while setting points one at a time.
-//PERHAPS FOR FUTURE: Set pots at once (e.g. 1111 sets D0-D3 to high, 0101 does what it should)
-
+//This code allows for all ports to be read simultaneously, while setting points one at a time or all at once
 
 char publishString[200]; //a place holer for the publish string
 int count = 0; //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
@@ -16,8 +14,9 @@ void setup()
   //This will send back the big data string
   Spark.variable("lab_data", &publishString, STRING);
 
-  //We'll use this to send the digital state
+  //We'll use these to send the digital state
   Spark.function("setOutput", setOutput);
+  Spark.function("setOutputs", setOutputs);
 
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
@@ -32,7 +31,7 @@ void setup()
   pinMode(D2, OUTPUT);
   pinMode(D3, OUTPUT);
   pinMode(D4, OUTPUT);
-  pinMode(D7, OUTPUT);
+  pinMode(D7, OUTPUT); //led
 
 
 }
@@ -103,10 +102,21 @@ void loop()
 
 }
 
-
+//set one input
 int setOutput(String potter)
 {
   //break the input string down into two parts.  1st in the bit to control, second is the value.  e.g. 41 means 'pin 4 high', 30 means 'pin 3 low'
   digitalWrite(potter.charAt(0)-48,potter.charAt(1)-48); //subtract 48 to make sense of ascii (i.e. ascii(48) = 0)
   return potter.toInt();
+}
+
+//set all inputs at once
+int setOutputs(String potter)
+{
+  //break the input string down into bit parts, update all.  e.g. 1001 sets 0 and 3 high, 1 and 2 low
+  digitalWrite(0,potter.charAt(0)-48); //subtract 48 to make sense of ascii (i.e. ascii(48) = 0)
+  digitalWrite(1,potter.charAt(1)-48); //subtract 48 to make sense of ascii (i.e. ascii(48) = 0)
+  digitalWrite(2,potter.charAt(2)-48); //subtract 48 to make sense of ascii (i.e. ascii(48) = 0)
+  digitalWrite(3,potter.charAt(3)-48); //subtract 48 to make sense of ascii (i.e. ascii(48) = 0)
+  return potter.charAt(0);
 }
