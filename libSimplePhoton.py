@@ -20,7 +20,6 @@ class simplePhoton():
         else:
             value = ""
             for a in arr: value += str(a)
-            print value
             return go('curl -s https://api.particle.io/v1/devices/%s/setOutputs \
          -d access_token=%s \
          -d "args=%s"' % (self.particle,self.ac,value))
