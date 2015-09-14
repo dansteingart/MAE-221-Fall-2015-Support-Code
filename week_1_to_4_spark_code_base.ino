@@ -5,6 +5,11 @@
 
 
 char publishString[200]; //a place holer for the publish string
+int count = 0; //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
+int countto = 20; // wait 20 clicks before publishing data
+int waiter = 50; //in ms
+int samps = 50; //sampler counter for smooth smoothness
+  
 
 void setup()
 {
@@ -27,15 +32,13 @@ void setup()
   pinMode(D2, OUTPUT);
   pinMode(D3, OUTPUT);
   pinMode(D4, OUTPUT);
+  pinMode(D7, OUTPUT);
 
 
 }
 
 void loop()
 {
-  // Keep reading the sensor value so when we make an API
-  // call to read its value, we have the latest one
-    
     
     int a0 = 0;
     int a1 = 0;
@@ -51,11 +54,11 @@ void loop()
     int d2;
     int d3;
     int d4;
-
-
+    
+    
+    
     //sample each port samps times and then average
-   int samps = 50;
-   for (int j = 0; j < samps; j++) 
+    for (int j = 0; j < samps; j++) 
    {
      a0 += analogRead(A0);  
      a1 += analogRead(A1);  
@@ -67,6 +70,7 @@ void loop()
      a7 += analogRead(A7);  
    }
    
+   
    a0 = a0/samps;
    a1 = a1/samps;
    a2 = a2/samps;
@@ -76,20 +80,26 @@ void loop()
    a6 = a6/samps;
    a7 = a7/samps;
 
-
-   //read the DIO states
    d0 = digitalRead(0);
    d1 = digitalRead(1);
    d2 = digitalRead(2);
    d3 = digitalRead(3);
    d4 = digitalRead(4);
 
-   //send the state of the state
-   sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3);
-   Spark.publish("lab_data",publishString);
 
-  //wait a second (or whatever)
-  delay(1000);
+
+    //wait countto clicks before sending publish data; blink the led every X to let us know how hard it's working
+    if (count > countto )
+    {
+     sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3);
+     Spark.publish("lab_data",publishString);
+     count = 0;
+    }
+    
+    else count +=1;
+    digitalWrite(7,!digitalRead(7));
+    delay(waiter);
+
 
 }
 
