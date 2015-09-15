@@ -15,9 +15,10 @@ void setup()
   Spark.variable("lab_data", &publishString, STRING);
 
   //We'll use these to send the digital state
-  Spark.function("setOutput", setOutput);
-  Spark.function("setOutputs", setOutputs);
+  Spark.function("setOutput", setOutput); //this sets just one pin
+  Spark.function("setOutputs", setOutputs); //this sets all pins
 
+  //set the pinModes:  Here all analog pins are made inputs (0-4095), and DIO 0-3 and 7(for LED) are made outputs
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
@@ -39,6 +40,7 @@ void setup()
 void loop()
 {
     
+    //initialize some variables with logical names
     int a0 = 0;
     int a1 = 0;
     int a2 = 0;
@@ -54,9 +56,7 @@ void loop()
     int d3;
     int d4;
     
-    
-    
-    //sample each port samps times and then average
+    //sample each port samps times .....
     for (int j = 0; j < samps; j++) 
    {
      a0 += analogRead(A0);  
@@ -69,7 +69,7 @@ void loop()
      a7 += analogRead(A7);  
    }
    
-   
+   //.. then average
    a0 = a0/samps;
    a1 = a1/samps;
    a2 = a2/samps;
@@ -79,6 +79,7 @@ void loop()
    a6 = a6/samps;
    a7 = a7/samps;
 
+  // digital pins don't/shouldn't need averaging
    d0 = digitalRead(0);
    d1 = digitalRead(1);
    d2 = digitalRead(2);
@@ -94,10 +95,9 @@ void loop()
      Spark.publish("lab_data",publishString);
      count = 0;
     }
-    
     else count +=1;
-    digitalWrite(7,!digitalRead(7));
-    delay(waiter);
+    digitalWrite(7,!digitalRead(7)); //toggles the led
+    delay(waiter); 
 
 
 }
