@@ -6,7 +6,7 @@ import time
 class simplePhoton():
     def __init__(self,name):
         self.particle = name
-        self.ac = "4d00567d59827a7503304992811a08394a1332aa"
+        self.ac = open("/home/labroot/ac").read()
 
     def setOutput(self,bit,value):
         return go('curl -s https://api.particle.io/v1/devices/%s/setOutput \
