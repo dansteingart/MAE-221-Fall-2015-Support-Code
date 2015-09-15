@@ -18,7 +18,7 @@ class simplePhoton():
 
 
     def setOutputs(self,arr):
-        '''set all digital pins at once, where 1 is high and 0 is low```
+        '''set all digital pins at once, where 1 is high and 0 is low'''
         if len(arr) != 4:
             return "need exactly four bits"
         else:
@@ -29,7 +29,7 @@ class simplePhoton():
          -d "args=%s"' % (self.particle,self.ac,value))
 
     def getData(self):
-        ''Get current data from sparks``
+        '''Get current data from sparks'''
         data = go("curl -s -G https://api.spark.io/v1/devices/%s/lab_data -d access_token=%s" % (self.particle,self.ac))
         data = json.loads(data)
         st = data['result']
