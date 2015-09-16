@@ -58,7 +58,6 @@ void loop()
     int d2;
     int d3;
     //int d4;
-    float temp;
 
     //sample each port samps times and then average
     for (int j = 0; j < samps; j++) 
@@ -90,12 +89,11 @@ void loop()
     d3 = digitalRead(3);
     //d4 = digitalRead(4);
     
-    temp = thermocouple.readCelsius();
     //wait countto clicks before sending publish data; blink the led every X to let us know how hard it's working
     if (count > countto )
     {
+     float temp = thermocouple.readCelsius(); //read from TC chip
      sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d,\"temp\": %f}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,temp);
-     //sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d, \"c\": %f}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,c);
      Spark.publish("lab_data",publishString);
      count = 0;
     }
@@ -103,7 +101,6 @@ void loop()
     else count +=1;
     digitalWrite(7,!digitalRead(7));
     delay(waiter);
-    delay(3000);
 
 
 }
