@@ -1,6 +1,8 @@
 //Base Spark Code for Labs 1 & 2 (Weeks 1-4)
 //MAE 221 Fall 2015 
 //This code allows for all ports to be read simultaneously, while setting points one at a time or all at once
+#include "Adafruit_MAX31855/Adafruit_MAX31855.h"
+#include "math.h"
 
 char publishString[200]; //a place holer for the publish string
 int count = 0; //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
@@ -8,17 +10,20 @@ int countto = 20; // wait 20 clicks before publishing data
 int waiter = 50; //in ms
 int samps = 50; //sampler counter for smooth smoothness
   
+int thermoDO = D6;
+int thermoCS = D5;
+int thermoCLK = D4;
+
+Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
 
 void setup()
 {
   //This will send back the big data string
   Spark.variable("lab_data", &publishString, STRING);
-
   //We'll use these to send the digital state
-  Spark.function("setOutput", setOutput); //this sets just one pin
-  Spark.function("setOutputs", setOutputs); //this sets all pins
+  Spark.function("setOutput", setOutput);
+  Spark.function("setOutputs", setOutputs);
 
-  //set the pinModes:  Here all analog pins are made inputs (0-4095), and DIO 0-3 and 7(for LED) are made outputs
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
@@ -31,16 +36,14 @@ void setup()
   pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
   pinMode(D3, OUTPUT);
-  pinMode(D4, OUTPUT);
+  //pinMode(D4, OUTPUT);
   pinMode(D7, OUTPUT); //led
-
 
 }
 
 void loop()
 {
     
-    //initialize some variables with logical names
     int a0 = 0;
     int a1 = 0;
     int a2 = 0;
@@ -54,9 +57,10 @@ void loop()
     int d1;
     int d2;
     int d3;
-    int d4;
-    
-    //sample each port samps times .....
+    //int d4;
+    float temp;
+
+    //sample each port samps times and then average
     for (int j = 0; j < samps; j++) 
    {
      a0 += analogRead(A0);  
@@ -66,38 +70,40 @@ void loop()
      a4 += analogRead(A4);  
      a5 += analogRead(A5);  
      a6 += analogRead(A6);  
-     a7 += analogRead(A7);  
+     a7 += analogRead(A7);
+     
    }
    
-   //.. then average
-   a0 = a0/samps;
-   a1 = a1/samps;
-   a2 = a2/samps;
-   a3 = a3/samps;
-   a4 = a4/samps;
-   a5 = a5/samps;
-   a6 = a6/samps;
-   a7 = a7/samps;
-
-  // digital pins don't/shouldn't need averaging
-   d0 = digitalRead(0);
-   d1 = digitalRead(1);
-   d2 = digitalRead(2);
-   d3 = digitalRead(3);
-   d4 = digitalRead(4);
-
-
-
+   
+    a0 = a0/samps;
+    a1 = a1/samps;
+    a2 = a2/samps;
+    a3 = a3/samps;
+    a4 = a4/samps;
+    a5 = a5/samps;
+    a6 = a6/samps;
+    a7 = a7/samps;
+    
+    d0 = digitalRead(0);
+    d1 = digitalRead(1);
+    d2 = digitalRead(2);
+    d3 = digitalRead(3);
+    //d4 = digitalRead(4);
+    
+    temp = thermocouple.readCelsius();
     //wait countto clicks before sending publish data; blink the led every X to let us know how hard it's working
     if (count > countto )
     {
-     sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3);
+     sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d,\"temp\": %f}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,temp);
+     //sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d, \"c\": %f}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,c);
      Spark.publish("lab_data",publishString);
      count = 0;
     }
+    
     else count +=1;
-    digitalWrite(7,!digitalRead(7)); //toggles the led
-    delay(waiter); 
+    digitalWrite(7,!digitalRead(7));
+    delay(waiter);
+    delay(3000);
 
 
 }
