@@ -9,14 +9,15 @@ int count = 0; //looper that allows us to have a control responsive photon while
 int countto = 20; // wait 20 clicks before publishing data
 int waiter = 50; //in ms
 int samps = 50; //sampler counter for smooth smoothness
-  
+
+//MAX31855 requires 3 digital pins
 int thermoDO = D6;
 int thermoCS = D5;
 int thermoCLK = D4;
 
-Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO);
+Adafruit_MAX31855 thermocouple(thermoCLK, thermoCS, thermoDO); //define a MAX31855 structure called thermocouple
 
-void setup()
+void setup() //run this loop just once upon start, or upon reset
 {
   //This will send back the big data string
   Spark.variable("lab_data", &publishString, STRING);
@@ -24,6 +25,7 @@ void setup()
   Spark.function("setOutput", setOutput);
   Spark.function("setOutputs", setOutputs);
 
+  //set analog pins to input mode
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
@@ -32,18 +34,19 @@ void setup()
   pinMode(A5, INPUT);
   pinMode(A6, INPUT);
   pinMode(A7, INPUT);
+  
+  //set digital pins not used by MAX31855 (4,5,6) to output mode
   pinMode(D0, OUTPUT);
   pinMode(D1, OUTPUT);
   pinMode(D2, OUTPUT);
   pinMode(D3, OUTPUT);
-  //pinMode(D4, OUTPUT);
   pinMode(D7, OUTPUT); //led
 
 }
 
-void loop()
+void loop() //repeat this loop forever
 {
-    
+    //declare pin labels as integers
     int a0 = 0;
     int a1 = 0;
     int a2 = 0;
@@ -57,10 +60,9 @@ void loop()
     int d1;
     int d2;
     int d3;
-    //int d4;
 
-    //sample each port samps times and then average
-    for (int j = 0; j < samps; j++) 
+    //average the readings at each port for stability
+    for (int j = 0; j < samps; j++) //sum values samps times
    {
      a0 += analogRead(A0);  
      a1 += analogRead(A1);  
@@ -72,8 +74,7 @@ void loop()
      a7 += analogRead(A7);
      
    }
-   
-   
+    // take the average
     a0 = a0/samps;
     a1 = a1/samps;
     a2 = a2/samps;
@@ -92,7 +93,11 @@ void loop()
     //wait countto clicks before sending publish data; blink the led every X to let us know how hard it's working
     if (count > countto )
     {
-     float temp = thermocouple.readCelsius(); //read from TC chip
+     float temp = thermocouple.readCelsius(); //read from MAX31855 TC chip
+    if (isnan(temp)) 
+    {
+        temp=-42; //If no TC is connected, temperature whigs out. 
+     } 
      sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d,\"temp\": %f}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,temp);
      Spark.publish("lab_data",publishString);
      count = 0;
@@ -101,7 +106,6 @@ void loop()
     else count +=1;
     digitalWrite(7,!digitalRead(7));
     delay(waiter);
-
 
 }
 
