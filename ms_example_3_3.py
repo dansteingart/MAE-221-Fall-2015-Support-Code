@@ -4,7 +4,8 @@ from CoolProp.CoolProp import PropsSI
 """
 MS Example 3.3
 
-A well-insulated rigid tank having a volume of 10 ft^3 contains saturated water vapor at 212F. The water is rapidly stirred until the pressure is 20 lbf/in.2
+A well-insulated rigid tank having a volume of 10 ft^3 contains saturated water vapor at 212F. 
+The water is rapidly stirred until the pressure is 20 lbf/in.2
 
 Determine the temperature at the final state, work 
 during the process, in Btu.
