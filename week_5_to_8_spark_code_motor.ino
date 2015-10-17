@@ -1,18 +1,16 @@
-//Base Spark Code for Labs 3 & 4 (Weeks 4-8)
+//Base Spark Code for Labs 3 & 4 (Weeks 5-8)
 //MAE 221 Fall 2015 
 
 //This code allows for all ports to be read simultaneously, while setting points one at a time or all at once
 #include "math.h"
 #include "stdio.h"
 char publishString[200]; //a place holer for the publish string
-int count = 0; //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
-int countto = 20; // wait 20 clicks before publishing data
-int waiter = 50; //in ms
-int samps = 50; //sampler counter for smooth smoothness
+int count = 0;           //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
+int countto = 20;        // wait 20 clicks before publishing data
+int waiter = 50;         //in ms
+int samps = 50;          //sampler counter for smooth smoothness
 
-
-
-
+//Deprecated not used
 int a_set_pwm;
 int b_set_pwm;
 int a_set_mode;
@@ -39,9 +37,9 @@ void setup() //run this loop just once upon start, or upon reset
   pinMode(A6, OUTPUT);
   pinMode(A7, INPUT);
   
+  //For Voltage Divider
   digitalWrite(A5,0);
   digitalWrite(A6,1);
-
 
   pinMode(D0, OUTPUT);  //PWM A
   pinMode(D1, OUTPUT);  //PWM B
