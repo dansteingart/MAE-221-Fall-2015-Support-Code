@@ -1,38 +1,31 @@
 //Base Spark Code for Labs 3 & 4 (Weeks 4-8)
 //MAE 221 Fall 2015 
 
-//This code allows for full control of the Adafruit 6612 Motor Driver
-
+//This code allows for all ports to be read simultaneously, while setting points one at a time or all at once
 #include "math.h"
 #include "stdio.h"
-
 char publishString[200]; //a place holer for the publish string
 int count = 0; //looper that allows us to have a control responsive photon while not flooding the cloud with data every 50 ms
 int countto = 20; // wait 20 clicks before publishing data
 int waiter = 50; //in ms
 int samps = 50; //sampler counter for smooth smoothness
 
-//Setup ports for motor driver
-int AIN1;
-int AIN2;
-int BIN1;
-int BIN2;
-int APWM;
-int BPWM;
 
-//setting checks for motor driver
+
+
 int a_set_pwm;
 int b_set_pwm;
 int a_set_mode;
 int b_set_mode;
 
-//array to make setting driver efficient
 int parr[6];
+int PWMS[4];
+
 
 void setup() //run this loop just once upon start, or upon reset
 {
   //This will send back the big data string
-  Spark.variable("lab2_data", &publishString, STRING);
+  Spark.variable("lab_data", &publishString, STRING);
   //We'll use these to send the digital state
   Spark.function("setMotor", setMotor);
 
@@ -42,35 +35,23 @@ void setup() //run this loop just once upon start, or upon reset
   pinMode(A2, INPUT);
   pinMode(A3, INPUT);
   pinMode(A4, INPUT);
-  pinMode(A5, INPUT);
-  pinMode(A6, INPUT);
+  pinMode(A5, OUTPUT);
+  pinMode(A6, OUTPUT);
   pinMode(A7, INPUT);
   
-  //Define Pins for motor driver
-  APWM = D0;
-  BPWM = D1;
-  AIN1 = D2;
-  AIN2 = D3;
-  BIN1 = D4;
-  BIN2 = D5;
-  
-  pinMode(APWM, OUTPUT);  //PWM A
-  pinMode(BPWM, OUTPUT);  //PWM B
-  pinMode(AIN1, OUTPUT);  //AIN1
-  pinMode(AIN2, OUTPUT);  //AIN2
-  pinMode(BIN1, OUTPUT);  //BIN1
-  pinMode(BIN2, OUTPUT);  //BIN2
+  digitalWrite(A5,0);
+  digitalWrite(A6,1);
+
+
+  pinMode(D0, OUTPUT);  //PWM A
+  pinMode(D1, OUTPUT);  //PWM B
+  pinMode(D2, OUTPUT);  //AIN1
+  pinMode(D3, OUTPUT);  //AIN2
+  pinMode(D4, OUTPUT);  //BIN1
+  pinMode(D5, OUTPUT);  //BIN2
   pinMode(D6, OUTPUT);  //free switch
   pinMode(D7, OUTPUT); //led
-  
-  parr[0] = APWM;
-  parr[1] = BPWM;
-  parr[2] = AIN1;
-  parr[3] = BIN1;
-  parr[4] = AIN2;
-  parr[5] = BIN2;
-
-
+ 
 
   
 
@@ -103,10 +84,7 @@ void loop() //repeat this loop forever
      a2 += analogRead(A2);  
      a3 += analogRead(A3);  
      a4 += analogRead(A4);  
-     a5 += analogRead(A5);  
-     a6 += analogRead(A6);  
-     a7 += analogRead(A7);
-     
+
    }
     // take the average
     a0 = a0/samps;
@@ -114,10 +92,7 @@ void loop() //repeat this loop forever
     a2 = a2/samps;
     a3 = a3/samps;
     a4 = a4/samps;
-    a5 = a5/samps;
-    a6 = a6/samps;
-    a7 = a7/samps;
-    
+
     d0 = digitalRead(0);
     d1 = digitalRead(1);
     d2 = digitalRead(2);
@@ -131,7 +106,7 @@ void loop() //repeat this loop forever
     //wait countto clicks before sending publish data; blink the led every X to let us know how hard it's working
     if (count > countto )
     {
-     sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"a4\": %d,\"a5\": %d,\"a6\": %d,\"a7\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d,\"d4\": %d,\"d5\": %d,\"a_pwm\": %d,\"a_mode\": %d,\"b_pwm\": %d,\"b_mode\": %d}",a0,a1,a2,a3,a4,a5,a6,a7,d0,d1,d2,d3,d4,d5,a_set_pwm,a_set_mode,b_set_pwm,b_set_mode);
+     sprintf(publishString,"{\"a0\": %d, \"a1\": %d, \"a2\": %d,\"a3\": %d,\"d0\": %d,\"d1\": %d,\"d2\": %d,\"d3\": %d,\"d4\": %d,\"d5\": %d,\"a_pwm\": %d,\"a_mode\": %d,\"b_pwm\": %d,\"b_mode\": %d}",a0,a1,a2,a3,PWMS[0],PWMS[1],PWMS[2],PWMS[3],d4,d5,a_set_pwm,a_set_mode,b_set_pwm,b_set_mode);
      Spark.publish("lab_data",publishString);
      count = 0;
     }
@@ -142,52 +117,35 @@ void loop() //repeat this loop forever
 
 }
 
+
+
 //set one input
 int setMotor(String potter)
 {
 
-  //break the input string down into three parts.  
+  //break the input string down into two parts.  
   int motor = potter.charAt(0)-48;  //1 or 2
-  int mode  = potter.charAt(1)-48;  //0 Brake, 1 Forward, 2 Reverse, 3 Free Run
+  int mode  = potter.charAt(1)-48;  //0 Brake, 1 Forward
   int PWM  =  (potter.charAt(2)-48)*100 +(potter.charAt(3)-48)*10 + (potter.charAt(4)-48) ;  //0 to 255 (8Bit control)
 
-
-    if (motor ==0)
-    {
-        a_set_pwm = PWM;
-        a_set_mode = mode;
-    }
-
-    else if (motor == 1)
-    {
-        b_set_pwm = PWM;
-        b_set_mode = mode;
-    }
+    PWMS[motor] = PWM;
 
 
     if (mode == 0)
     {
-        digitalWrite(parr[motor+2],1);
-        digitalWrite(parr[motor+4],1);
-         analogWrite(parr[motor],0);
+        analogWrite(motor,0);
     }
-      else if (mode == 1)
+    else if (mode == 1)
     {
-        digitalWrite(parr[motor+2],1);
-        digitalWrite(parr[motor+4],0);
-        analogWrite(parr[motor],PWM); //0 or 1
+        analogWrite(motor,PWM); //0 or 1
     }
+
     else if (mode == 2)
     {
-        digitalWrite(parr[motor+2],0);
-        digitalWrite(parr[motor+4],1);
-        analogWrite(parr[motor],PWM);
-    }
-    else if (mode == 3)
-    {
-        digitalWrite(parr[motor+2],0);
-        digitalWrite(parr[motor+4],0);
-        analogWrite(parr[motor],0);
+            
+        if (PWM > 0) digitalWrite(motor,1); //0 or 1
+        else digitalWrite(motor,0); //0 or 1
+
     }
 
 
@@ -195,4 +153,5 @@ int setMotor(String potter)
 
   return potter.toInt();
 }
+
 
