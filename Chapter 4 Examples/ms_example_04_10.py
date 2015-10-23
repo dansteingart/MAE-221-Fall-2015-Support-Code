@@ -37,7 +37,8 @@ x_5  = 0.93
 St[5]  = stater('P',P_5,'Q',x_5,'water')
 
 #Problem A
-Wdot_turbine = mdot_1*(St[1]['H']-St[2]['H'])+mdot_3*(St[3]['H']-St[5]['H'])
+#W = mdot1*h1 + mdot3*h3 - mdot1*h2 - mdot3*h5
+Wdot_turbine = mdot_1*St[1]['H'] + St[2]['H'])+mdot_3*(St[3]['H']-St[5]['H'])
 
 print "The Turbine in generating: ", round(Wdot_turbine/1000,2), 'kW'
 
