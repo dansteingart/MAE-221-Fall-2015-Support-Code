@@ -46,6 +46,37 @@ v4 = v1
 #v4/v3 = T3/T4
 T4 = T3*v4/v3
 
+P = [p1,p2,p3,p4,p1]
+V = [v1,v2,v3,v4,v1]
+
+vs12 = linspace(v1,v2,100)
+ps12 = (p1*v1**1)/vs12**1
+
+vs23 = linspace(v2,v3,100)
+ps23 = (p2*v2**k)/vs23**k
+
+vs34 = linspace(v3,v4,100)
+ps34 = linspace(p3,p4,100)
+
+vs41 = linspace(v4,v1,100)
+ps41 = linspace(p4,p1,100)
+
+
+print ps12
+plot(V,P,'k.',markersize=10)
+for i in range(4): annotate(" State "+str(i+1),xy=(V[i],P[i]))
+plot(vs12,ps12,'r')
+plot(vs23,ps23,'r')
+plot(vs34,ps34,'r')
+plot(vs41,ps41,'r')
+ylim(2e5,5.5e5)
+xlim(3e-4,5.8e-4)
+ylabel("Pressure (Pa)")
+xlabel("Volume (m^3/kg)")
+showme()
+clf()
+
+
 #Process 1-2
 U12 = cv_air*(T2-T1)
 W12 = R_air * T1 * log(v2/v1)
@@ -65,7 +96,6 @@ Q34 = round(U34 + W34,2)
 W41 = (v4-v1)
 U41 = cv_air*(T1-T4)
 Q41 = round(U41 + W41,2) 
-
 
 Qin = Q12 + Q41
 Wcycle = W12+W23+W34+W41
