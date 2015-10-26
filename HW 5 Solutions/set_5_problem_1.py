@@ -36,4 +36,14 @@ W12 = n*R*T1 * log(V2/V1)
 Q12 = W12
 W23 = 0
 Q23 = cv_air*(T3-T2)
+print "The pressure at state 2 is",round(p2/1000,2),"kPa"
+print "The temperature at state 3 is ",round(T3,2),"K"
+
+print "For each Process:"
+out = "Step,Q (kJ),W (kJ)\n"
+out+= "%s,%.1f,%.1f\n" %("1-2",Q12/1000,W12/1000)
+out+= "%s,%.1f,%.1f\n" %("2-3",Q23/1000,W23/1000)
+print csv_to_table(out)
+
+print "Everything Else!" 
 whos(locals())
