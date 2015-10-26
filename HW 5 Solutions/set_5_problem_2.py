@@ -8,7 +8,7 @@ Process 2-3: Polytropic expansion with n=k to p3=0.3MPa
 Process 3-4: Constant-pressure compression to V4=V1
 Process 4-1: Constant-volume heating
 
-Sketch the cycle on a py diagram. Determine (a) the work and heat transfer for each process, in kJ/kg, and (d) the thermal efficiency for the entire process (W/Q)
+Sketch the cycle on a pv diagram. Determine (a) the work and heat transfer for each process, in kJ/kg, and (b) the thermal efficiency for the entire process (W/Q)
 
 http://steingart.princeton.edu:8004/mae221fall2015/problem_set_05#4
 """
@@ -61,8 +61,6 @@ ps34 = linspace(p3,p4,100)
 vs41 = linspace(v4,v1,100)
 ps41 = linspace(p4,p1,100)
 
-
-print ps12
 plot(V,P,'k.',markersize=10)
 for i in range(4): annotate(" State "+str(i+1),xy=(V[i],P[i]))
 plot(vs12,ps12,'r')
@@ -100,7 +98,17 @@ Q41 = round(U41 + W41,2)
 Qin = Q12 + Q41
 Wcycle = W12+W23+W34+W41
 eta = Wcycle/Qin
-whos(locals())
+
+out = "Steps,Heat (kJ/kg),Work(kJ/kg)\n"
+out += "1-2,%.2f,%.2f\n" % (Q12,W12)
+out += "2-3,%.2f,%.2f\n" % (Q23,W23)
+out += "3-4,%.2f,%.2f\n" % (Q34,W34)
+out += "4-1,%.2f,%.2f\n" % (Q41,W41)
+
+
+print csv_to_table(out)
+print "The thermal efficiency is " , round(eta*100,3),"%"
+#whos(locals())
 
 
 
