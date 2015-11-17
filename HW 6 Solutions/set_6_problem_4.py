@@ -39,7 +39,8 @@ print "The total Power Required is %.2f kw" % (W_dot_total/1000)
 
 #m_dot_water * (h6-h5) = m_dot_air*(h3-h2)
 
-m_dot_water = m_dot_air*(St[3]['H']-St[1]['H'])/(St[6]['H']-St[5]['H'])
+#Fixed 2015-11-17 good catch @maxschwegman
+m_dot_water = -m_dot_air*(St[3]['H']-St[2]['H'])/(St[6]['H']-St[5]['H'])
 
 print "The mass flow rate of water is %.2f kg/s" % (m_dot_water)
 
