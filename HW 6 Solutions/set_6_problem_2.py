@@ -11,6 +11,8 @@ T2 = 250 #K
 #This is because no work or heat is cross the CV boundary
 #Edot = 0 =  mdot((v1^2 - v2^2)/2 + (h1-h2)) 
 
+#Also 1 (m/s)**2 = J/kg
+
 St = {}
 #First we need to see what states we have
 St[1] = stater('P',p1,'T',T1,'air')
