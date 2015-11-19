@@ -19,7 +19,7 @@ St[1] = stater('P',p1,'T',T1,'air')
 h1 = St[1]['H']
 #State 1 Defined
 
-p2 = p1*(T2/T1)
+#Enthalpy is a very weak function of Pressure, so assume P2 = P1
 St[2] = stater('P',p2,'T',T2,'air')
 h2 = St[2]['H']
 #State 2 Defined
