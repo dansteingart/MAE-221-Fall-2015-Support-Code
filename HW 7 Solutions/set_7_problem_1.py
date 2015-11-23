@@ -23,8 +23,8 @@ St[2] = stater('P',p2,'T',T2,'water')
 
 print state_table(St)
 
-Delta_s_dot = Q/T1 + (m*St[2]['S']-m*St[1]['S'])/1000
+Delta_S = Q/T1 + (m*St[2]['S']-m*St[1]['S'])/1000
 
-print "The entropy generated is %.2f kJ/K" % Delta_s_dot
+print "The entropy generated is %.2f kJ/K" % Delta_S
 
 print "Process is impossible because there is no heat transfer and entropy generated is negative"
