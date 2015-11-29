@@ -23,7 +23,7 @@ W_elec = Q_wall/cop
 print "The power required is  %.2f kW" % W_elec
 print
 
-print "Part B: If using a reversible heat pump "
+print "Part C: If using a reversible heat pump "
 print "W_elec = Q_wall/cop_ideal "
 cop_ideal = T_H/(T_H-T_C)
 W_elec = Q_wall/cop_ideal 
