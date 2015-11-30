@@ -19,6 +19,13 @@ m2dot = 2    #kg/s
 #First find T3
 
 # 0 = Qcv - Wcv + sum(mi hi) - sum(me he)
+
+# 20151129 Added steps below for clarificaiton, answer is still the same
+# 0 = m1dot * h1 + m2dot*h2 - m3dot * h3
+# m3dot = m1dot + m2dot
+# m1dot * h1 + m2dot*h2 - (m1dot + m2dot) * h3
+# m1dot * cp*T1 + m2dot*cp*T2 - (m1dot + m2dot) *cp* T3
+
 T3 = (m1dot*T1 + m2dot*T2)/(m1dot + m2dot)
 #Now use the ideal gas model to try  P3 = 1.0 MPa
 p3 = 10e5
