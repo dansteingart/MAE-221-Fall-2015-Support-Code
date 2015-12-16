@@ -9,12 +9,13 @@ k = 1.4
 cv = R_air/(k-1)
 cp = cv+R
 r = 8.0 #compression ratio
+rp = 2.9 #pressure ratio
 
 TC = 540 * .55 # K
 TH = 3600 * .55 # K
 figure(figsize=(9,9))
 
-for r in [5.,8.,10.,15.]:
+for r in [5.,8.,10.,20.]:
     T1 = TC
     P1 = 1e5
     V1 = 0.0005663369 # m^3
@@ -28,9 +29,10 @@ for r in [5.,8.,10.,15.]:
     
     #2 to 3, cv heating 
     Qin = 931
-    T3 = Qin/cv + T2
+    #T3 = Qin/cv + T2
     #T3 = TH
-    P3 = P2*T3/T2 
+    P3 = P2*rp 
+    T3 = T2*rp
     
     #3 to 4, isentropic expansion
     T4 = T3*exp(-(R_air/cv)*log(r))
@@ -82,7 +84,7 @@ for r in [5.,8.,10.,15.]:
     subplot(2,1,1)
     plot(Vs,Ps,label="r = %.0f, eta = %.2f, MEP =  %.1f kPa, W_cycle = %.0f kJ/kg" % (r,eta,mep/1e5,Wcycle))
     semilogy()
-    title("The Effect of Changing Compression Ratio (r)")
+    title("Otto Cycle: Effect of Changing Compression Ratio (r) (rp = %.1f)" % rp)
     ylabel("Pressure (Pa)")
     xlabel("Volume (m^3)")
     ylim(5e4,2e7)
