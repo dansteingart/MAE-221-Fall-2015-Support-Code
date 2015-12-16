@@ -12,6 +12,7 @@ r = 8.0 #compression ratio
 
 TC = 540 * .55 # K
 TH = 3600 * .55 # K
+figure(figsize=(9,9))
 
 for r in [5.,8.,10.,15.]:
     T1 = TC
@@ -21,8 +22,8 @@ for r in [5.,8.,10.,15.]:
     T2 = T1*exp(-(R_air/cv)*log(1/r))
     P2 = P1*T2/T1 *(r)
 
-    T12 = linspace(T1,T2,100)
     r12 = linspace(1,r,100)
+    T12 = T1*exp(-(R_air/cv)*log(1/r12))
     P12 = P1*(T12/T1)*(r12)
     
     #2 to 3, cv heating 
@@ -35,8 +36,8 @@ for r in [5.,8.,10.,15.]:
     T4 = T3*exp(-(R_air/cv)*log(r))
     P4 = (P3)*(T4/T3)*(1/r)
     
-    T34 = linspace(T3,T4,100)
     r34 = linspace(1,r,100)
+    T34 = T3*exp(-(R_air/cv)*log(r34))
     P34 = P3*(T34/T3)*(1/r34)
 
     Q41 = cv*(T4-T1)
@@ -78,14 +79,14 @@ for r in [5.,8.,10.,15.]:
     Ts = concatenate(([T1,T2],T23,[T3,T4],T41),0)
     Ss = concatenate(([S1,S2],S23,[S3,S4],S41),0)
 
-
     subplot(2,1,1)
     plot(Vs,Ps,label="r = %.0f, eta = %.2f, MEP =  %.1f kPa, W_cycle = %.0f kJ/kg" % (r,eta,mep/1e5,Wcycle))
     semilogy()
+    title("The Effect of Changing Compression Ratio (r)")
     ylabel("Pressure (Pa)")
     xlabel("Volume (m^3)")
     ylim(5e4,2e7)
-    legend(loc='best',fontsize=10,frameon=False)
+    legend(loc='best',fontsize=11,frameon=False)
     subplot(2,1,2)
     plot(Ss,Ts)
     xlim(-1,8)
