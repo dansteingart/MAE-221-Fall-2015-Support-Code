@@ -12,7 +12,7 @@ cp = cv + R_air
 r = 18.  #V1/V2
 rc = 2.  #V3/V2, cut off ratio or when fuel addition "cuts off"
 
-figure(figsize=(12,12))
+figure(figsize=(10,10))
 for r in [10.,15.,18.,25.]:
     T1 = 300 #K
     P1 = 1e5 #Pa
@@ -32,7 +32,6 @@ for r in [10.,15.,18.,25.]:
     r34 = linspace(1,r-rc,100)
     T34 = T3*exp(-(R_air/cv)*log(r34))
     P34 = P3*(T34/T3 *(1/(r34)))
-    print P4,P34[-1]
 
     
     Q_C = cv*(T4-T1)
@@ -75,7 +74,7 @@ for r in [10.,15.,18.,25.]:
     vs = concatenate((v12,v34,[v1]))
     
     subplot(2,1,1)
-    title("The Effect of Changing Cutoff Ratio (r)")
+    title("The Effect of Changing Compression Ratio (r)")
     plot(vs,Ps,alpha=.5,label="r = %.0f, eta = %.2f, MEP =  %.0f kPa, W_cycle = %.0f kJ/kg"%(r,eta,MEP,W_cycle),linewidth=2)
     legend(loc="best",frameon=False)
     xlabel("Volume (m^3/kg)")
