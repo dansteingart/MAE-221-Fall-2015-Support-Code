@@ -15,7 +15,9 @@ TC = 540 * .55 # K
 TH = 3600 * .55 # K
 figure(figsize=(9,9))
 
-for r in [5.,8.,10.,20.]:
+crs = [5.,8.,10.,20.] #compression ratio to sweep
+
+for r in crs:
     T1 = TC
     P1 = 1e5
     V1 = 0.0005663369 # m^3
@@ -83,17 +85,30 @@ for r in [5.,8.,10.,20.]:
 
     subplot(2,1,1)
     plot(Vs,Ps,label="r = %.0f, eta = %.2f, MEP =  %.1f kPa, W_cycle = %.0f kJ/kg" % (r,eta,mep/1e5,Wcycle))
+    if r == crs[3]: #if first sweep, annotate plot
+        annotate("1",xy=(V1,P1))
+        annotate("2",xy=(V2,P2))
+        annotate("3",xy=(V3,P3))
+        annotate("4",xy=(V4,P4))
     semilogy()
     title("Otto Cycle: Effect of Changing Compression Ratio (r) (rp = %.1f)" % rp)
     ylabel("Pressure (Pa)")
     xlabel("Volume (m^3)")
-    ylim(5e4,2e7)
+    ylim(5e4,3e7)
     legend(loc='best',fontsize=11,frameon=False)
     subplot(2,1,2)
     plot(Ss,Ts)
+    if r == crs[3]: #if first sweep, annotate plot
+        annotate("1",xy=(S1,T1))
+        annotate("2",xy=(S2,T2))
+        annotate("3",xy=(S3,T3))
+        annotate("4",xy=(S4,T4))
+
     xlim(-1,8)
     ylabel("Temperature (K)")
     xlabel("Entropy vs. State 1 (kJ/K)")
+
+
 
 showme()
 clf()
