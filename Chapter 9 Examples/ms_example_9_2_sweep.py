@@ -74,7 +74,7 @@ for r in [10.,15.,18.,25.]:
     vs = concatenate((v12,v34,[v1]))
     
     subplot(2,1,1)
-    title("The Effect of Changing Compression Ratio (r)")
+    title("Diesel Cycle: Effect of a Changing Compression Ratio (r)")
     plot(vs,Ps,alpha=.5,label="r = %.0f, eta = %.2f, MEP =  %.0f kPa, W_cycle = %.0f kJ/kg"%(r,eta,MEP,W_cycle),linewidth=2)
     legend(loc="best",frameon=False)
     xlabel("Volume (m^3/kg)")
