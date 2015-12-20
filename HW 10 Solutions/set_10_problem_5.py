@@ -36,6 +36,7 @@ T3 = T2+(T3s-T2)/eta_comp #K
 #3-4 Combustor
 T4 = 1140 #K
 P4 = P3 # Pa
+
 #4-5 Turbine
 eta_turb = 0.85
 P5 = 50e3 #Pa
