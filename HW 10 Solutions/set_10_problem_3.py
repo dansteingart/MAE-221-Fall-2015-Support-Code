@@ -9,7 +9,7 @@ Rair = 8.31446 / 28.97 #kJ/(kg K)
 
 k = 1.4
 cv = Rair/(k-1) 
-cp = cv+1
+cp = cv+R
 
 mdot = AV1*P1/(Rair*T1)/1000 #kg/s
 
