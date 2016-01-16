@@ -1,6 +1,6 @@
 from pithy import *
 
-# Water is the working fluid in a Rankine cycle with reheat. Superheated vapor enters the turbine at 10 MPa, 480 C, and the condenser pressure is 6 kPa. Steam expands through the first-stage turbine to 0.7 MPa and then is reheated to 480 C. Determine for the cycle
+# Water is the working fluid in a Rankine cycle with reheat. Superheated vapor enters the turbine at 10 MPa, 600 C, and the condenser pressure is 6 kPa. Steam expands through the first-stage turbine to 0.7 MPa and then is reheated to 480 C. Determine for the cycle
 # (a) the heat addition, in kJ per kg of steam entering the first-stage turbine.
 # (b) the thermal efficiency.
 # (c) the heat transfer from the working fluid passing through the condenser to the cooling water, in kJ per kg of steam entering the first-stage turbine.
@@ -26,7 +26,7 @@ St[2] = stater('H',h2,'P',P2,'water')
 
 #Reheat to T1
 P3 = P2
-T3 = T1
+T3 = 480+273
 St[3] = stater('T',T3,'P',P3,'water')
 
 #Through Second Turbine
