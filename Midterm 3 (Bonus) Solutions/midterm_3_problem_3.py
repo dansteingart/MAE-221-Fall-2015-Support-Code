@@ -16,8 +16,8 @@ from pithy import *
 print "Part A) compare PV and TS.  PV is already given by the relationship in the cycle, so determining Ts.  The trick is the change on limts on T and S are determined by the exhaust condition"
 print
 print "It helps to see that "
-print "eta = 1 - Qc/Qa"
-print "and this is the converse of the diesel cycle, where Q41 = H4 - H1 = Qc for the atkinson cycle"
+print "eta = 1 - Qca/Qh"
+print "and this is the converse of the diesel cycle, where Q41 = H4 - H1 = Qca for the atkinson cycle"
 
 print "Other than that, apply the analysis from The examples in chapter 9"
 
@@ -33,7 +33,7 @@ cp = cv + R_air
 
 r = 8.0 #compression ratio
 
-TC = 295
+TC = 300 #K #corrected to that of problem statement
 
 
 #1 to 2, Isentropic Compression
@@ -59,10 +59,10 @@ print "for the otto cycle"
 #3 to 4, isentropic expansion
 T4 = T3*exp(-(R_air/cv)*log(r/1.))
 P4 = P3*(T4/T3)*(1/r)
-Q41 = cv*(T4-T1)
+Q41o = cv*(T4-T1)
 Q23 = cv*(T3-T2)
 
-eta = 1 - (Q41/Q23)
+eta = 1 - (Q41o/Q23)
 
 
 
@@ -80,7 +80,7 @@ print
 print "Find Mean Effective Pressure"
 mass = P1*V1/(R_air*T1)
 
-Wcycle = mass*(Q23-Q41)
+Wcycle = mass*(Q23-Q41o)
 print "Wcycle = %.2f kJ" % Wcycle
 
 mep = Wcycle/(V1*(1-(1/r))) 
@@ -95,10 +95,10 @@ T4a = T3*exp(-(R_air/cp)*log(P3/P4a))
 
 V2 =  R_air*T2/P2
 V4a = R_air*T4/P4a
-Q41 = cp*(T4a-T1)
+Q41a = cp*(T4a-T1)
 Q23 = cv*(T3-T2)
 
-eta = 1 - (Q41/Q23)
+eta = 1 - (Q41a/Q23)
 
 
 
@@ -116,7 +116,7 @@ print
 print "Find Mean Effective Pressure"
 mass = P1*V1/(R_air*T1)
 
-Wcycle = mass*(Q23-Q41)
+Wcycle = mass*(Q23-Q41a)
 
 print "Wcycle = %.2f kJ" % Wcycle
 
