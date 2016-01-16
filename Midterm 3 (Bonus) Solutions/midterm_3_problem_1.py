@@ -73,6 +73,9 @@ W_net = W_turb_1 + W_turb_2 + W_pump
 
 print "Q_in_1 = h1-h6 = %.2f kJ/kg" % Q_in_1
 print "Q_in_2 = h3-h2 = %.2f kJ/kg" % Q_in_2
+print "Q_total = Q_in_1 + Q_in_2 = %.2f" % (Q_in_1 + Q_in_2)
+#updated to reflect conversation here https://trello.com/c/a6OxILNs/59-midterm-3-2015-12-18-bonus-due-deans-date
+
 
 print "(part b) the thermal efficiency of the cycle"
 print "eta = 1 - (-Q_out/(Q_in_1+Q_in_2)) = %.2f" % eta
