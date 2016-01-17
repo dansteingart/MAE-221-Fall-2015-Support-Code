@@ -53,38 +53,38 @@ for c in ['o','a']:
     V3 = V2
     P3 = mass*R_air*T3/V3
 
-    if c == 'o':
+    if c == 'o': # for the otto cycle, V4 = V1 
         #3 to 4, isentropic expansion
-        V4 = V1
+        V4 = V1 #
         T4 = T3*exp(-(R_air/cv)*log(V4/V3))
         P4 = (P3)*(T4/T3)**(k/(k-1))
     
-    if c == 'a':
+    if c == 'a': #for the atkinson cycle, P4 = P1 
         #3 to 4, isentropic expansion
         P4 = P1
         T4 = T3*(P4/P3)**((k-1)/k)
         V4 = mass*R_air*T4/P4
     
-    #V4 = V1
+        #Calculate Heats/Work
+    if c == 'o': Q41 = cv*(T4-T1) #constant volume cooling, Q = Delta U + W, W = 0
+    if c == 'a': Q41 = cp*(T4-T1) #constaot pressure cooling, Q = Delta U + W, W = p(V4-V1) ==> Q = Delta H 
     
-    #Calculate Heats/Work
-    if c == 'o': Q41 = cv*(T4-T1)
-    if c == 'a': Q41 = cp*(T4-T1)
-    
+    #Base Enthalpy Change on State 1
     S1 = 0
     S2 = S1
     S3 = S2 + mass*(cp*log(T3/T2)-R_air*log(P3/P2))
     S4 = S3 
     
+    #Make arrays for plots
     Ps = [P1,P2,P3,P4,P1]
     Vs = [V1,V2,V3,V4,V1]
     Ts = [T1,T2,T3,T4,T1]
     Ss = [S1,S1,S3,S4,S1]
     
+    #Caculate things that need calculation
     eta = 1 - (Q41/Q23)
     Wcycle = mass*(Q23-Q41)
     mep = Wcycle/(max(Vs)-min(Vs)) 
-
 
     subplot(2,1,1)
     plot(Vs,Ps,mp,label="r = %.0f, eta = %.2f, MEP =  %.1f kPa, W_cycle = %.0f kJ/kg" % (r,eta,mep/1e5,Wcycle))
@@ -92,7 +92,7 @@ for c in ['o','a']:
         st = str(i+1)
         if st == "4": st = st+c
         annotate(st,xy=(Vs[i],Ps[i]))
-    loglog()
+    loglog() 
 
     title("Comparison: Atkinson Vs. Otto")
     ylabel("Pressure (Pa)")
@@ -109,7 +109,7 @@ for c in ['o','a']:
     xlim(-.1,1)
     ylabel("Temperature (K)")
     xlabel("Entropy vs. State 1 (kJ/K)")
-    semilogy()
+    semilogy() 
 
 showme()
 clf()
